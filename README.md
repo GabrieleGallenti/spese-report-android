@@ -1,7 +1,8 @@
 # Spese — report da estratti conto CSV
 
-App Android che legge uno o più estratti conto in CSV e genera il report delle spese
-**ricorrenti**, **extra** e **tutto il resto**, mese per mese o su più mesi.
+App Android che legge uno o più estratti conto in CSV, **di qualsiasi banca, carta o servizio di pagamento**,
+e genera il report delle spese **ricorrenti**, **extra** e **tutto il resto**, mese per mese o su più mesi.
+Basta un CSV con data, importo e descrizione: non serve un formato particolare.
 Tutto resta sul telefono: l'app non ha il permesso Internet e i dati sono esclusi dai backup.
 
 Il progetto è sviluppato con [ECC](https://github.com/affaan-m/ecc): la cartella `.claude/` contiene
@@ -9,14 +10,22 @@ agenti, skill e regole ECC per Kotlin/Android (vedi [Sviluppo con ECC](#sviluppo
 
 ## Cosa fa
 
-- **Importa più CSV insieme**, anche di banche diverse, dal selettore file o con "Condividi → Spese".
-- Riconosce da solo il formato:
+- **Importa più CSV insieme**, di banche e servizi diversi, dal selettore file o con "Condividi → Spese".
+- **Funziona con qualsiasi CSV di movimenti bancari.** Il formato generico richiede una riga di intestazione con
+  una colonna **Data** (anche *Data valuta*), una **Importo** (oppure **Uscite** ed **Entrate**) e una
+  **Descrizione** (anche *Causale* o *Dettagli*). Separatore (`;` `,` tab), importi (`-1.234,56` o `-1234.56`)
+  e date (`gg/mm/aaaa`, `gg/mm/aa`, `aaaa-mm-gg`) sono riconosciuti da soli; righe di testata sopra
+  l'intestazione e righe non valide vengono ignorate.
+- Alcuni formati hanno in più un riconoscimento dedicato, che estrae meglio nomi ed esercenti:
   | Formato | Come esportarlo |
   |---|---|
   | Conto principale – *Elenco movimenti* (`Operazione;Valuta;Tipologia Operazione;Descrizione;Uscite;Entrate`) | home banking → Movimenti → esporta CSV |
   | ING Conto Corrente Arancio – *Lista transazioni* | app/sito ING → Movimenti → Scarica → CSV |
   | PayPal – *Tutte le transazioni* | paypal.com → Attività → Report → Scarica (CSV) |
-  | CSV generico con colonne **Data**, **Importo** (oppure **Uscite/Entrate**) e **Descrizione** | qualsiasi banca |
+- **Storici allineati**: se importi più fonti, l'app parte dalla data comune, cioè la più recente tra le prime
+  date di ogni fonte, e scarta i movimenti precedenti, così i totali sono confrontabili. Tutti i CSV generici
+  contano come un'unica fonte. Se una fonte ha pochi movimenti all'inizio del periodo, esporta tutte le fonti
+  per lo stesso intervallo di date, altrimenti la data comune risulta più recente del previsto.
 - **Classifica** ogni movimento in un gruppo e una categoria:
   - *Ricorrenti*: affitto, condominio, luce e gas, telefono, TARI, rate, assicurazione auto, abbonamenti, parcheggio mensile
   - *Tutto il resto*: spesa, carburante, auto, trasporti e pedaggi, salute, casa, contanti, cura persona, tasse, formazione

@@ -37,11 +37,18 @@ class HistoryAlignmentTest {
     }
 
     @Test
-    fun `il CSV generico non decide la data e non viene tagliato`() {
-        val generic = listOf(raw(Source.ALTRO, "2026-06-01"), raw(Source.ALTRO, "2024-01-01"))
-        val aligned = HistoryAlignment.align(banca + ing + generic)
-        assertEquals(LocalDate.parse("2025-11-18"), HistoryAlignment.commonStart(banca + ing + generic))
-        assertEquals(2, aligned.count { it.source == Source.ALTRO })
+    fun `i CSV generici di qualsiasi banca partecipano all allineamento`() {
+        val generic = listOf(raw(Source.ALTRO, "2024-01-01"), raw(Source.ALTRO, "2026-01-10"))
+        val all = banca + generic
+        assertEquals(LocalDate.parse("2025-11-18"), HistoryAlignment.commonStart(all))
+        assertEquals(listOf("2026-01-10"), HistoryAlignment.align(all).filter { it.source == Source.ALTRO }.map { it.date.toString() })
+    }
+
+    @Test
+    fun `un CSV generico piu recente taglia le altre fonti`() {
+        val generic = listOf(raw(Source.ALTRO, "2026-03-01"))
+        assertEquals(LocalDate.parse("2026-03-01"), HistoryAlignment.commonStart(banca + generic))
+        assertEquals(generic, HistoryAlignment.align(banca + generic))
     }
 
     @Test
