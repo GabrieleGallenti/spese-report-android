@@ -1,0 +1,8 @@
+DATA CONTABILE;DATA VALUTA;USCITE;ENTRATE;CAUSALE;DESCRIZIONE OPERAZIONE
+01/03/2026;;;+1.300,00;;Saldo iniziale
+05/03/2026;05/03/2026;-3,00;;Commiss. Rilascio Carta Di Debito;RILASCIO CARTA DI DEBITO
+09/03/2026;09/03/2026;;+1.530,28;Giroconto;Giroconto N. ABC Anagrafica Ordinante Mario Rossi Note: Giroconto
+12/03/2026;10/03/2026;-258,80;;Pagamento Carta;Operazione Mastercard del 10/03/2026 alle ore 17:40 con Carta xxxx Div=EUR Importo in divisa=258.8 / Importo in Euro=258.8 presso AUTOZATTI - Transazione C-less
+12/03/2026;10/03/2026;-12,00;;Pagamento Carta;Operazione Mastercard del 10/03/2026 alle ore 23:27 con Carta xxxx Div=EUR Importo in divisa=12 / Importo in Euro=12 presso CIRCOLO TWICKENHAM - Transazione C-less
+12/03/2026;12/03/2026;;+1.885,00;Accredito Stipendio/Pensione;Bonifico N. ZZ Anagrafica Ordinante ACME S.P.A. Note: STIPENDIO MESE DI FEBBRAIO
+23/03/2026;;;+4.441,48;;Saldo finale
