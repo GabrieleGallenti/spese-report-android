@@ -28,6 +28,7 @@ import java.nio.charset.CharacterCodingException
 import java.nio.charset.Charset
 import java.nio.charset.CodingErrorAction
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 data class ReportUiState(
     val loading: Boolean = true,
@@ -87,7 +88,8 @@ class ReportViewModel(app: Application) : AndroidViewModel(app) {
                 raw = merged
                 store.saveTransactions(merged)
                 setData(summary.transactions, keepPeriod = false)
-                _state.update { it.copy(message = summary.files.joinToString("\n") { o -> o.describe() }) }
+                val aligned = summary.alignedFrom?.let { "\nStorico allineato dal ${it.format(DATE_IT)} in tutte le fonti" }.orEmpty()
+                _state.update { it.copy(message = summary.files.joinToString("\n") { o -> o.describe() } + aligned) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -182,5 +184,6 @@ class ReportViewModel(app: Application) : AndroidViewModel(app) {
 
     private companion object {
         const val MAX_FILE_BYTES = 20 * 1024 * 1024
+        val DATE_IT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     }
 }

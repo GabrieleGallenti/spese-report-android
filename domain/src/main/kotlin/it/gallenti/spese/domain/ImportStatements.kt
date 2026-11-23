@@ -1,10 +1,12 @@
 package it.gallenti.spese.domain
 
+import it.gallenti.spese.domain.categorize.HistoryAlignment
 import it.gallenti.spese.domain.categorize.Reconciler
 import it.gallenti.spese.domain.model.RawTransaction
 import it.gallenti.spese.domain.model.Transaction
 import it.gallenti.spese.domain.parser.ParseResult
 import it.gallenti.spese.domain.parser.StatementParser
+import java.time.LocalDate
 
 /** Esito dell'importazione di un singolo file. */
 sealed interface FileOutcome {
@@ -14,7 +16,12 @@ sealed interface FileOutcome {
     data class Failed(override val fileName: String, val reason: String) : FileOutcome
 }
 
-data class ImportSummary(val transactions: List<Transaction>, val files: List<FileOutcome>)
+/** @property alignedFrom data di inizio comune a cui sono allineati gli storici, se c'è più di una fonte. */
+data class ImportSummary(
+    val transactions: List<Transaction>,
+    val files: List<FileOutcome>,
+    val alignedFrom: LocalDate? = null,
+)
 
 /**
  * Caso d'uso: legge più estratti conto (anche di formati diversi), li unisce
@@ -39,6 +46,6 @@ class ImportStatementsUseCase {
             old.date.isBefore(range.first) || old.date.isAfter(range.second)
         }
         val merged = kept + incoming
-        return ImportSummary(Reconciler.reconcile(merged), outcomes) to merged
+        return ImportSummary(Reconciler.reconcile(merged), outcomes, HistoryAlignment.commonStart(merged)) to merged
     }
 }

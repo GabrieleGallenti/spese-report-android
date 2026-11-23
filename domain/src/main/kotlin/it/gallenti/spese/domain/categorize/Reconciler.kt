@@ -11,12 +11,14 @@ import java.security.MessageDigest
  *
  * Se c'è l'estratto PayPal, gli addebiti "PayPal" su banca/ING dalla data di inizio
  * dell'estratto PayPal diventano giroconti: la spesa vera è la riga PayPal col negozio.
+ * Prima di tutto gli storici delle fonti vengono allineati alla stessa data di inizio ([HistoryAlignment]).
  */
 object Reconciler {
 
     const val PAYPAL_TOPUP = "Ricarica PayPal (dettaglio nelle righe PayPal)"
 
-    fun reconcile(raw: List<RawTransaction>): List<Transaction> {
+    fun reconcile(allRaw: List<RawTransaction>): List<Transaction> {
+        val raw = HistoryAlignment.align(allRaw)
         val paypalStart = raw.filter { it.source == Source.PAYPAL }.minOfOrNull { it.date }
         val seen = HashMap<String, Int>()
         return raw.map { r ->
