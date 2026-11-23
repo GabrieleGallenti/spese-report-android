@@ -17,8 +17,9 @@ object Reconciler {
 
     const val PAYPAL_TOPUP = "Ricarica PayPal (dettaglio nelle righe PayPal)"
 
-    fun reconcile(allRaw: List<RawTransaction>): List<Transaction> {
-        val raw = HistoryAlignment.align(allRaw)
+    /** @param alignHistories se false, non taglia gli storici delle fonti alla data comune. */
+    fun reconcile(allRaw: List<RawTransaction>, alignHistories: Boolean = true): List<Transaction> {
+        val raw = if (alignHistories) HistoryAlignment.align(allRaw) else allRaw
         val paypalStart = raw.filter { it.source == Source.PAYPAL }.minOfOrNull { it.date }
         val seen = HashMap<String, Int>()
         return raw.map { r ->

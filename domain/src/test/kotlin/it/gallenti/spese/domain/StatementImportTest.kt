@@ -107,7 +107,10 @@ class StatementImportTest {
 
     @Test
     fun `report multi-mese con medie`() {
-        val tx = importAll("banca_esempio.csv", "paypal_esempio.csv", "ing_esempio.csv")
+        // Le fixture hanno storici sfasati: qui si verificano i calcoli del report, non l'allineamento.
+        val raw = listOf("banca_esempio.csv", "paypal_esempio.csv", "ing_esempio.csv")
+            .flatMap { StatementParser.parse(fixture(it)).transactions }
+        val tx = Reconciler.reconcile(raw, alignHistories = false)
         val report = ReportCalculator.build(tx, YearMonth.of(2026, 2), YearMonth.of(2026, 3))
         assertEquals(2, report.monthCount)
         val march = report.months.last().totals
