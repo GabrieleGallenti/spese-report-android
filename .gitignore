@@ -15,3 +15,6 @@ build/
 *.CSV
 estratti/
 !domain/src/test/resources/*.csv
+
+# Note locali per Claude Code (contesto personale)
+CLAUDE.local.md
