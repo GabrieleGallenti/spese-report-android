@@ -16,12 +16,13 @@ agenti, skill e regole ECC per Kotlin/Android (vedi [Sviluppo con ECC](#sviluppo
   **Descrizione** (anche *Causale* o *Dettagli*). Separatore (`;` `,` tab), importi (`-1.234,56` o `-1234.56`)
   e date (`gg/mm/aaaa`, `gg/mm/aa`, `aaaa-mm-gg`) sono riconosciuti da soli; righe di testata sopra
   l'intestazione e righe non valide vengono ignorate.
-- Alcuni formati hanno in più un riconoscimento dedicato, che estrae meglio nomi ed esercenti:
-  | Formato | Come esportarlo |
-  |---|---|
-  | Conto principale – *Elenco movimenti* (`Operazione;Valuta;Tipologia Operazione;Descrizione;Uscite;Entrate`) | home banking → Movimenti → esporta CSV |
-  | ING Conto Corrente Arancio – *Lista transazioni* | app/sito ING → Movimenti → Scarica → CSV |
-  | PayPal – *Tutte le transazioni* | paypal.com → Attività → Report → Scarica (CSV) |
+- Alcuni formati hanno in più un riconoscimento dedicato, che estrae meglio nomi ed esercenti. Sono
+  riconosciuti dalle colonne dell'intestazione:
+  | Formato | Intestazione | Come esportarlo |
+  |---|---|---|
+  | Elenco movimenti di un conto | `Operazione;Valuta;Tipologia Operazione;Descrizione;Uscite;Entrate` | home banking → Movimenti → esporta CSV |
+  | Lista transazioni di un conto | `DATA CONTABILE;DATA VALUTA;USCITE;ENTRATE;CAUSALE;DESCRIZIONE OPERAZIONE` | home banking → Movimenti → scarica CSV |
+  | Export di un portafoglio di pagamento online | `Data`, `Nome`, `Tipo`, `Stato`, `Lordo`, `Codice transazione`, … | sito del servizio → Attività → Report → scarica CSV |
 - **Storici allineati**: se importi più fonti, l'app parte dalla data comune, cioè la più recente tra le prime
   date di ogni fonte, e scarta i movimenti precedenti, così i totali sono confrontabili. Tutti i CSV generici
   contano come un'unica fonte. Se una fonte ha pochi movimenti all'inizio del periodo, esporta tutte le fonti
@@ -31,10 +32,10 @@ agenti, skill e regole ECC per Kotlin/Android (vedi [Sviluppo con ECC](#sviluppo
   - *Tutto il resto*: spesa, carburante, auto, trasporti e pedaggi, salute, casa, contanti, cura persona, tasse, formazione
   - *Extra*: ristoranti e delivery, viaggi e tempo libero, shopping online, regali, videogiochi, scommesse
   - *Entrate*: stipendio, interessi, rimborsi
-  - *Giroconti e risparmi*: giroconti, piano di accantonamento, depositi vincolati, ricariche PayPal (esclusi dai totali)
-- **Niente doppi conteggi con PayPal**: se importi anche l'estratto PayPal, gli addebiti "PayPal" sul conto
-  diventano ricariche e la spesa conta col nome vero del negozio. Gli acquisti *Paga in 3* contano per intero
-  il giorno dell'acquisto; le rate successive sono escluse.
+  - *Giroconti e risparmi*: giroconti, piano di accantonamento, depositi vincolati, ricariche del portafoglio online (esclusi dai totali)
+- **Niente doppi conteggi con il portafoglio online**: se importi anche il suo estratto, gli addebiti sul conto
+  che lo citano diventano ricariche e la spesa conta col nome vero del negozio. Gli acquisti pagati a rate
+  tramite il portafoglio contano per intero il giorno dell'acquisto; le rate successive sono escluse.
 - **Report**: periodo libero (Da/A) o rapido (ultimo mese, 3, 6, 12, tutto), totali e media mensile, grafico a
   barre impilate (tocca una barra per vedere quel mese), dettaglio per categoria, tabella di confronto tra mesi,
   lista movimenti con filtri per gruppo, fonte e ricerca.
